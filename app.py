@@ -27,11 +27,17 @@ def index():
 @app.route("/fixtures")
 def fixtures():
     try:
-        data = get_team_fixtures()
+        next_matches = get_team_fixtures()
+        past_matches = get_team_past_matches()
     except Exception as e:
-        data = []
-        print("Error cargando fixtures:", e)
-    return render_template("fixtures.html", fixtures=data, active_page="fixtures")
+        next_matches, past_matches = [], []
+    return render_template(
+        "fixtures.html",
+        next_matches=next_matches,
+        past_matches=past_matches,
+        active_page="fixtures"
+    )
+
 
 
 

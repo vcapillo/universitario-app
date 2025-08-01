@@ -1,31 +1,81 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="mb-4 text-center">📅 Próximos Partidos</h2>
+<h2 class="mb-4 text-center">📅 Partidos de Universitario</h2>
 
-{% if fixtures %}
-  <ul class="list-group">
-    {% for match in fixtures %}
-      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-        <div class="col-md-5 d-flex align-items-center">
-          <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:30px;">
-          <strong>{{ match.homeTeam.name }}</strong>
-        </div>
-        <div class="col-md-2 text-center">vs</div>
-        <div class="col-md-5 d-flex align-items-center justify-content-end">
-          <strong>{{ match.awayTeam.name }}</strong>
-          <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:30px;">
-        </div>
-        <div class="col-12 mt-2 d-flex justify-content-between">
-          <span>{{ match.startTimestamp | datetimeformat }}</span>
-          <span class="badge bg-secondary">{{ match.tournament.name }}</span>
-        </div>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <div class="alert alert-info text-center">
-    No hay partidos próximos registrados por ahora.
+<!-- Próximos Partidos -->
+<h4 class="mt-4 mb-3 text-success">Próximos Partidos</h4>
+{% if next_matches %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle text-center shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th class="text-start">Local</th>
+          <th>vs</th>
+          <th class="text-end">Visitante</th>
+          <th>Fecha</th>
+          <th>Torneo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for match in next_matches %}
+        <tr>
+          <td class="text-start">
+            <img src="{{ match.homeTeam.logo }}" style="height:30px;" class="me-2">
+            <strong>{{ match.homeTeam.name }}</strong>
+          </td>
+          <td>⚽</td>
+          <td class="text-end">
+            <strong>{{ match.awayTeam.name }}</strong>
+            <img src="{{ match.awayTeam.logo }}" style="height:30px;" class="ms-2">
+          </td>
+          <td>{{ match.startTimestamp | datetimeformat("%d/%m/%Y %H:%M") }}</td>
+          <td><span class="badge bg-secondary">{{ match.tournament.name }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+{% else %}
+  <div class="alert alert-info">No hay próximos partidos.</div>
+{% endif %}
+
+<!-- Partidos Jugados -->
+<h4 class="mt-5 mb-3 text-danger">Partidos Jugados</h4>
+{% if past_matches %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle text-center shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th class="text-start">Local</th>
+          <th>Resultado</th>
+          <th class="text-end">Visitante</th>
+          <th>Fecha</th>
+          <th>Torneo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for match in past_matches %}
+        <tr>
+          <td class="text-start">
+            <img src="{{ match.homeTeam.logo }}" style="height:30px;" class="me-2">
+            <strong>{{ match.homeTeam.name }}</strong>
+          </td>
+          <td>
+            {{ match.homeScore.current }} - {{ match.awayScore.current }}
+          </td>
+          <td class="text-end">
+            <strong>{{ match.awayTeam.name }}</strong>
+            <img src="{{ match.awayTeam.logo }}" style="height:30px;" class="ms-2">
+          </td>
+          <td>{{ match.startTimestamp | datetimeformat("%d/%m/%Y") }}</td>
+          <td><span class="badge bg-secondary">{{ match.tournament.name }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">No hay partidos jugados registrados.</div>
 {% endif %}
 
 {% endblock %}
