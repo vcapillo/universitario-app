@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Partidos - Universitario App{% endblock %}
+{% block content %}
+  <h2 class="mb-4">Próximos Partidos</h2>
+  <ul class="list-group">
+    {% for match in fixtures.get("events", []) %}
+      <li class="list-group-item d-flex justify-content-between">
+        <span>{{ match["homeTeam"]["name"] }} vs {{ match["awayTeam"]["name"] }}</span>
+        <span>{{ match["startTimestamp"] | datetimeformat }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

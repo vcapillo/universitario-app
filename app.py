@@ -1,23 +1,21 @@
-from flask import Flask, jsonify
-import sofascore_api
+from flask import Flask, render_template
+from sofascore_api import get_team_fixtures, get_standings
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "<h1>¡Y dale U!</h1><p>Seguimiento Clausura 2025</p>"
+    return render_template("home.html", active_page="home")
 
-# Ruta JSON con fixtures de Universitario
-@app.route("/api/fixtures")
+@app.route("/fixtures")
 def fixtures():
-    data = sofascore_api.get_team_fixtures()
-    return jsonify(data)
+    data = get_team_fixtures()
+    return render_template("fixtures.html", fixtures=data, active_page="fixtures")
 
-# Ruta JSON con tabla Clausura 2025
-@app.route("/api/standings")
+@app.route("/standings")
 def standings():
-    data = sofascore_api.get_standings()
-    return jsonify(data)
+    data = get_standings()
+    return render_template("standings.html", standings=data, active_page="standings")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
