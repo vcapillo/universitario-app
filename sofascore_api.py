@@ -36,26 +36,31 @@ def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0):
 
 def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID):
     """
-    Obtiene la tabla de posiciones y agrega el logo de cada equipo.
+    Obtiene la tabla de posiciones de la Liga 1 Clausura 2025.
+    Retorna una lista de equipos con sus estadísticas + logo.
     """
     url = f"{BASE_URL}/tournaments/get-standings"
     params = {"tournamentId": tournament_id, "seasonId": season_id, "type": "total"}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
-    standings = r.json()
+    data = r.json()
 
-    # Agregamos los logos a cada equipo de la tabla
-    try:
-        rows = standings.get("standings", [])[0].get("rows", [])
-        for row in rows:
-            team_id = row["team"]["id"]
-            row["team"]["logo"] = get_team_logo(team_id)
-    except Exception:
-        # fallback si falla
-        for row in rows:
+    # Normalizar: puede venir como dict con "standings" o lista
+    rows = []
+    if isinstance(data, dict) and "standings" in data:
+        rows = data["standings"][0]["rows"]
+    elif isinstance(data, list) and len(data) > 0 and "rows" in data[0]:
+        rows = data[0]["rows"]
+
+    # Agregar logos a cada equipo
+    for row in rows:
+        try:
+            row["team"]["logo"] = get_team_logo(row["team"]["id"])
+        except Exception:
             row["team"]["logo"] = "/static/img/logo_u.png"
 
-    return standings
+    return rows
+
 
 
 def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0):
