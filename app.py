@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from sofascore_api import get_team_fixtures, get_standings, get_team_logo
+from sofascore_api import get_team_fixtures, get_team_past_matches ,get_standings, get_team_logo
 import datetime
 
 app = Flask(__name__)
