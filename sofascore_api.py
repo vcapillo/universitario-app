@@ -4,8 +4,8 @@ import requests
 # Configuración base para RapidAPI SofaScore
 BASE_URL = "https://sofascore.p.rapidapi.com"
 HEADERS = {
-    "X-RapidAPI-Key": os.getenv("RAPIDAPI_KEY"),   # Defínela en Render o local
-    "X-RapidAPI-Host": "sofascore.p.rapidapi.com"
+    "x-rapidapi-key": os.getenv("RAPIDAPI_KEY"),   # Defínela en Render o local
+    "x-rapidapi-host": "sofascore.p.rapidapi.com"
 }
 
 # IDs exactos
