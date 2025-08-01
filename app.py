@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from sofascore_api import get_team_fixtures, get_standings
+from sofascore_api import get_team_fixtures, get_standings, get_team_logo
 import datetime
 
 app = Flask(__name__)
@@ -20,23 +20,42 @@ def datetimeformat(value, format="%d/%m/%Y %H:%M"):
 # -------------------------------
 @app.route("/")
 def index():
-    return render_template("base.html", active_page="home")
+    """Página principal con portada"""
+    return render_template("home.html", active_page="home")
+
 
 @app.route("/fixtures")
 def fixtures():
+    """Calendario de partidos de Universitario"""
     try:
         data = get_team_fixtures()
+        matches = data.get("events", [])
+        # Agregamos los logos de cada equipo
+        for match in matches:
+            match["homeLogo"] = get_team_logo(match["homeTeam"]["id"])
+            match["awayLogo"] = get_team_logo(match["awayTeam"]["id"])
     except Exception as e:
-        data = {"error": str(e)}
-    return render_template("fixtures.html", fixtures=data, active_page="fixtures")
+        matches = []
+        print(f"Error cargando fixtures: {e}")
+
+    return render_template("fixtures.html", fixtures=matches, active_page="fixtures")
+
 
 @app.route("/standings")
 def standings():
+    """Tabla de posiciones del Clausura"""
     try:
         data = get_standings()
+        standings = data.get("standings", [])[0].get("rows", [])
+        # Agregamos el logo de cada equipo
+        for row in standings:
+            row["team"]["logo"] = get_team_logo(row["team"]["id"])
     except Exception as e:
-        data = {"error": str(e)}
-    return render_template("standings.html", standings=data, active_page="standings")
+        standings = []
+        print(f"Error cargando standings: {e}")
+
+    return render_template("standings.html", standings=standings, active_page="standings")
+
 
 # -------------------------------
 # Render (Gunicorn)

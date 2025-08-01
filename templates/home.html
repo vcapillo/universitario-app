@@ -1,8 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Inicio - Universitario App{% endblock %}
+
 {% block content %}
-  <div class="text-center">
-    <h1 class="mb-3">Bienvenido a la App Crema ⚽</h1>
-    <p class="lead">Aquí podrás seguir a Universitario en el Torneo Clausura 2025.</p>
-  </div>
+<div class="text-center mb-4">
+  <!-- Imagen principal de portada -->
+  <img src="https://universitario.pe/media/images/banners/PORTDA_WEB.jpg" 
+       alt="Universitario de Deportes - Banner" 
+       class="img-fluid rounded shadow">
+</div>
+
+<div class="text-center">
+  <h2 class="mb-3">¡Vamos rumbo a la 29! 🏆</h2>
+  <p class="lead">Sigue de cerca a Universitario en la Liga 1 Clausura 2025.</p>
+  
+  <!-- Botones de acceso rápido -->
+  <a href="/fixtures" class="btn btn-primary btn-lg m-2">📅 Ver Calendario</a>
+  <a href="/standings" class="btn btn-success btn-lg m-2">📊 Ver Tabla</a>
+</div>
 {% endblock %}
