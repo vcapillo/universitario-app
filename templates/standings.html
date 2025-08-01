@@ -19,8 +19,8 @@
 
 <h2 class="mb-4 text-center">🏆 Tabla de Posiciones</h2>
 
-{% if standings and standings.get("standings") %}
-  {% set table = standings["standings"][0]["rows"] %}
+{% if standings %}
+  {% set table = standings[0]["rows"] %}
   <div class="table-responsive">
     <table class="table table-striped table-hover align-middle text-center">
       <thead class="table-dark">
