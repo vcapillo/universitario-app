@@ -1,0 +1,83 @@
+/* ======================
+   Estilos Universitario
+   ====================== */
+
+/* Colores principales */
+:root {
+  --crema: #f8f5e9;
+  --granate: #7a1c1c;
+  --granate-oscuro: #5c1414;
+  --texto: #333333;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: var(--crema);
+  color: var(--texto);
+  margin: 0;
+  padding: 0;
+}
+
+/* Barra de navegación */
+.navbar {
+  background-color: var(--granate);
+}
+
+.navbar-brand img {
+  height: 45px;
+}
+
+.navbar-nav .nav-link {
+  color: white !important;
+  font-weight: 500;
+  margin: 0 10px;
+}
+
+.navbar-nav .nav-link.active {
+  background-color: var(--granate-oscuro);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+/* Contenedor principal */
+.container {
+  margin-top: 40px;
+}
+
+/* Tablas */
+.table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+
+.table thead {
+  background-color: var(--granate);
+  color: white;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(122, 28, 28, 0.05);
+}
+
+.table-warning {
+  background-color: rgba(122, 28, 28, 0.15) !important;
+  color: var(--granate-oscuro);
+  font-weight: bold;
+}
+
+/* Encabezados */
+h1, h2, h3 {
+  color: var(--granate-oscuro);
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  margin-top: 50px;
+  padding: 15px;
+  background-color: var(--granate);
+  color: white;
+  text-align: center;
+}

@@ -1,32 +1,45 @@
 from flask import Flask, render_template
 from sofascore_api import get_team_fixtures, get_standings
-from datetime import datetime
+import datetime
 
 app = Flask(__name__)
 
+# -------------------------------
+# Filtro para formatear fechas
+# -------------------------------
+@app.template_filter("datetimeformat")
+def datetimeformat(value, format="%d/%m/%Y %H:%M"):
+    """Convierte timestamps en fecha legible"""
+    try:
+        return datetime.datetime.fromtimestamp(value).strftime(format)
+    except Exception:
+        return value
+
+# -------------------------------
+# Rutas principales
+# -------------------------------
 @app.route("/")
-def home():
-    return render_template("home.html", active_page="home")
+def index():
+    return render_template("base.html", active_page="home")
 
 @app.route("/fixtures")
 def fixtures():
-    data = get_team_fixtures()
+    try:
+        data = get_team_fixtures()
+    except Exception as e:
+        data = {"error": str(e)}
     return render_template("fixtures.html", fixtures=data, active_page="fixtures")
 
 @app.route("/standings")
 def standings():
-    data = get_standings()
+    try:
+        data = get_standings()
+    except Exception as e:
+        data = {"error": str(e)}
     return render_template("standings.html", standings=data, active_page="standings")
 
-@app.template_filter("datetimeformat")
-def datetimeformat(value, format="%d-%m-%Y %H:%M"):
-    """
-    Convierte timestamp en formato legible
-    Ejemplo: 1693449600 -> '31-08-2025 15:00'
-    """
-    if not value:
-        return ""
-    return datetime.fromtimestamp(int(value)).strftime(format)
-
+# -------------------------------
+# Render (Gunicorn)
+# -------------------------------
 if __name__ == "__main__":
     app.run(debug=True)

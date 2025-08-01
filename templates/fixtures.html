@@ -1,13 +1,30 @@
 {% extends "base.html" %}
-{% block title %}Partidos - Universitario App{% endblock %}
+
 {% block content %}
-  <h2 class="mb-4">Próximos Partidos</h2>
-  <ul class="list-group">
-    {% for match in fixtures.get("events", []) %}
-      <li class="list-group-item d-flex justify-content-between">
-        <span>{{ match["homeTeam"]["name"] }} vs {{ match["awayTeam"]["name"] }}</span>
-        <span>{{ match["startTimestamp"] | datetimeformat }}</span>
-      </li>
+<h2 class="mb-4">📅 Próximos Partidos</h2>
+
+{% if fixtures and fixtures.get("events") %}
+  <div class="list-group">
+    {% for match in fixtures["events"] %}
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="https://api.sofascore.app/api/v1/team/{{ match['homeTeam']['id'] }}/image"
+               alt="{{ match['homeTeam']['name'] }}"
+               class="me-2" style="height:32px;">
+          <strong>{{ match["homeTeam"]["name"] }}</strong>
+          <span class="mx-2">vs</span>
+          <strong>{{ match["awayTeam"]["name"] }}</strong>
+          <img src="https://api.sofascore.app/api/v1/team/{{ match['awayTeam']['id'] }}/image"
+               alt="{{ match['awayTeam']['name'] }}"
+               class="ms-2" style="height:32px;">
+        </div>
+        <span class="badge bg-primary">
+          {{ match["startTimestamp"] | datetimeformat }}
+        </span>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
+{% else %}
+  <p>No hay partidos próximos disponibles.</p>
+{% endif %}
 {% endblock %}
