@@ -36,23 +36,27 @@ def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0):
 
 def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID):
     """
-    Obtiene la tabla de posiciones (con logos locales).
+    Obtiene la tabla de posiciones y agrega el logo de cada equipo.
     """
     url = f"{BASE_URL}/tournaments/get-standings"
     params = {"tournamentId": tournament_id, "seasonId": season_id, "type": "total"}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
-    data = r.json()
+    standings = r.json()
 
+    # Agregamos los logos a cada equipo de la tabla
     try:
-        standings = data["standings"][0]["rows"]
-        for row in standings:
+        rows = standings.get("standings", [])[0].get("rows", [])
+        for row in rows:
             team_id = row["team"]["id"]
             row["team"]["logo"] = get_team_logo(team_id)
-    except Exception as e:
-        print(f"Error procesando standings: {e}")
+    except Exception:
+        # fallback si falla
+        for row in rows:
+            row["team"]["logo"] = "/static/img/logo_u.png"
 
-    return data
+    return standings
+
 
 def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0):
     """
