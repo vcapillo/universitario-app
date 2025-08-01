@@ -26,19 +26,13 @@ def index():
 
 @app.route("/fixtures")
 def fixtures():
-    """Calendario de partidos de Universitario"""
     try:
         data = get_team_fixtures()
-        matches = data.get("events", [])
-        # Agregamos los logos de cada equipo
-        for match in matches:
-            match["homeLogo"] = get_team_logo(match["homeTeam"]["id"])
-            match["awayLogo"] = get_team_logo(match["awayTeam"]["id"])
     except Exception as e:
-        matches = []
-        print(f"Error cargando fixtures: {e}")
+        data = []
+        print("Error cargando fixtures:", e)
+    return render_template("fixtures.html", fixtures=data, active_page="fixtures")
 
-    return render_template("fixtures.html", fixtures=matches, active_page="fixtures")
 
 
 @app.route("/standings")

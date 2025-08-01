@@ -1,30 +1,31 @@
 {% extends "base.html" %}
-
 {% block content %}
-<h2 class="mb-4">📅 Próximos Partidos</h2>
+<h2 class="mb-4 text-center">📅 Próximos Partidos</h2>
 
-{% if fixtures and fixtures.get("events") %}
-  <div class="list-group">
-    {% for match in fixtures["events"] %}
-      <div class="list-group-item d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-          <img src="https://api.sofascore.app/api/v1/team/{{ match['homeTeam']['id'] }}/image"
-               alt="{{ match['homeTeam']['name'] }}"
-               class="me-2" style="height:32px;">
-          <strong>{{ match["homeTeam"]["name"] }}</strong>
-          <span class="mx-2">vs</span>
-          <strong>{{ match["awayTeam"]["name"] }}</strong>
-          <img src="https://api.sofascore.app/api/v1/team/{{ match['awayTeam']['id'] }}/image"
-               alt="{{ match['awayTeam']['name'] }}"
-               class="ms-2" style="height:32px;">
+{% if fixtures %}
+  <ul class="list-group">
+    {% for match in fixtures %}
+      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+        <div class="col-md-5 d-flex align-items-center">
+          <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:30px;">
+          <strong>{{ match.homeTeam.name }}</strong>
         </div>
-        <span class="badge bg-primary">
-          {{ match["startTimestamp"] | datetimeformat }}
-        </span>
-      </div>
+        <div class="col-md-2 text-center">vs</div>
+        <div class="col-md-5 d-flex align-items-center justify-content-end">
+          <strong>{{ match.awayTeam.name }}</strong>
+          <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:30px;">
+        </div>
+        <div class="col-12 mt-2 d-flex justify-content-between">
+          <span>{{ match.startTimestamp | datetimeformat }}</span>
+          <span class="badge bg-secondary">{{ match.tournament.name }}</span>
+        </div>
+      </li>
     {% endfor %}
-  </div>
+  </ul>
 {% else %}
-  <p>No hay partidos próximos disponibles.</p>
+  <div class="alert alert-info text-center">
+    No hay partidos próximos registrados por ahora.
+  </div>
 {% endif %}
+
 {% endblock %}
