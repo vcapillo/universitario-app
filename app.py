@@ -5,17 +5,19 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "<h1>¡Y dale U!</h1><p>Seguimiento del Clausura 2025</p>"
+    return "<h1>¡Y dale U!</h1><p>Seguimiento Clausura 2025</p>"
 
-@app.route("/fixtures")
+# Ruta JSON con fixtures de Universitario
+@app.route("/api/fixtures")
 def fixtures():
     data = sofascore_api.get_team_fixtures()
     return jsonify(data)
 
-@app.route("/tabla")
-def tabla():
+# Ruta JSON con tabla Clausura 2025
+@app.route("/api/standings")
+def standings():
     data = sofascore_api.get_standings()
     return jsonify(data)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
