@@ -37,7 +37,7 @@ def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0):
 def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID):
     """
     Obtiene la tabla de posiciones de la Liga 1 Clausura 2025.
-    Retorna una lista de equipos con sus estadísticas + logo.
+    Hace debug imprimiendo la respuesta cruda de la API.
     """
     url = f"{BASE_URL}/tournaments/get-standings"
     params = {"tournamentId": tournament_id, "seasonId": season_id, "type": "total"}
@@ -45,12 +45,17 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
     r.raise_for_status()
     data = r.json()
 
-    # Normalizar: puede venir como dict con "standings" o lista
+    # DEBUG: mostrar estructura completa
+    print("DEBUG standings API response:", data)
+
     rows = []
     if isinstance(data, dict) and "standings" in data:
         rows = data["standings"][0]["rows"]
     elif isinstance(data, list) and len(data) > 0 and "rows" in data[0]:
         rows = data[0]["rows"]
+
+    # DEBUG: mostrar filas normalizadas
+    print("DEBUG parsed rows:", rows[:2])  # solo primeras 2 para no saturar logs
 
     # Agregar logos a cada equipo
     for row in rows:
@@ -60,6 +65,7 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
             row["team"]["logo"] = "/static/img/logo_u.png"
 
     return rows
+
 
 
 
