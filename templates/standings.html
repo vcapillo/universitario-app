@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-4 text-center">🏆 Tabla de Posiciones - Clausura 2025</h2>
+<h2 class="mb-4">🏆 Tabla de Posiciones - Clausura 2025</h2>
 
 {% if standings %}
   <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle text-center">
+    <table class="table table-striped table-hover align-middle">
       <thead class="table-dark">
         <tr>
           <th>#</th>
-          <th class="text-start">Equipo</th>
+          <th>Equipo</th>
           <th>Pts</th>
           <th>J</th>
           <th>G</th>
@@ -24,12 +24,11 @@
         {% for row in standings %}
           <tr {% if row.team.id == 2305 %} class="table-warning fw-bold" {% endif %}>
             <td>{{ row.position }}</td>
-            <td class="text-start d-flex align-items-center">
+            <td>
               <img src="{{ row.team.logo }}"
                    alt="{{ row.team.name }}"
-                   class="me-2 rounded-circle border"
-                   style="height:28px; width:28px; object-fit:cover;">
-              <span>{{ row.team.name }}</span>
+                   style="height:24px;" class="me-2">
+              {{ row.team.name }}
             </td>
             <td>{{ row.points }}</td>
             <td>{{ row.matches }}</td>
@@ -45,8 +44,6 @@
     </table>
   </div>
 {% else %}
-  <div class="alert alert-info text-center">
-    No hay información disponible de la tabla por ahora
-  </div>
+  <p>No hay información disponible de la tabla.</p>
 {% endif %}
 {% endblock %}
