@@ -45,16 +45,13 @@ def fixtures():
 def standings():
     """Tabla de posiciones del Clausura"""
     try:
-        data = get_standings()
-        standings = data.get("standings", [])[0].get("rows", [])
-        # Agregamos el logo de cada equipo
-        for row in standings:
-            row["team"]["logo"] = get_team_logo(row["team"]["id"])
+        standings = get_standings()
     except Exception as e:
         standings = []
         print(f"Error cargando standings: {e}")
 
     return render_template("standings.html", standings=standings, active_page="standings")
+
 
 
 # -------------------------------
