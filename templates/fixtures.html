@@ -31,10 +31,32 @@
 
 <h2 class="mb-4 text-center">📜 Últimos 6 Partidos Jugados</h2>
 
+<!-- Leyenda en un card -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-body text-center">
+    <h5 class="card-title mb-3">Leyenda Resultados</h5>
+    <span class="badge bg-success me-2">Victoria 🟢</span>
+    <span class="badge bg-danger me-2">Derrota 🔴</span>
+    <span class="badge bg-warning text-dark">Empate 🟡</span>
+  </div>
+</div>
+
 {% if past_matches %}
   <ul class="list-group">
     {% for match in past_matches %}
-      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+      {% set u_is_home = match.homeTeam.id == 2305 %}
+      {% set u_score = match.homeScore.display if u_is_home else match.awayScore.display %}
+      {% set rival_score = match.awayScore.display if u_is_home else match.homeScore.display %}
+
+      {% if u_score > rival_score %}
+        {% set result_class = "list-group-item-success" %}
+      {% elif u_score < rival_score %}
+        {% set result_class = "list-group-item-danger" %}
+      {% else %}
+        {% set result_class = "list-group-item-warning" %}
+      {% endif %}
+
+      <li class="list-group-item {{ result_class }} d-flex justify-content-between align-items-center flex-wrap">
         <div class="col-md-5 d-flex align-items-center">
           <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:30px;">
           <strong>{{ match.homeTeam.name }}</strong>
