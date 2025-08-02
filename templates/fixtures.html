@@ -2,100 +2,13 @@
 {% block content %}
 <h2 class="mb-4 text-center">📅 Próximos Partidos</h2>
 
-<div class="container">
-  <div class="col-md-8 col-lg-6 mx-auto">
-    {% if next_matches %}
-      <ul class="list-group mb-5 shadow-sm">
-        {% for match in next_matches %}
-          <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-            <div class="col-5 d-flex align-items-center">
-              <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:28px;">
-              <strong>{{ match.homeTeam.name }}</strong>
-            </div>
-            <div class="col-2 text-center fw-bold">vs</div>
-            <div class="col-5 d-flex align-items-center justify-content-end">
-              <strong>{{ match.awayTeam.name }}</strong>
-              <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:28px;">
-            </div>
-            <div class="col-12 mt-2 d-flex justify-content-between">
-              <span>{{ match.startTimestamp | datetimeformat }}</span>
-              <span class="badge bg-secondary">{{ match.tournament.name }}</span>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <div class="alert alert-info text-center">
-        No hay partidos próximos registrados por ahora.
-      </div>
-    {% endif %}
-  </div>
-</div>
-
-
-<h2 class="mb-4 text-center">📜 Últimos 6 Partidos Jugados</h2>
-
-<!-- Leyenda -->
-<div class="card mb-4 shadow-sm border col-md-8 col-lg-6 mx-auto">
-  <div class="card-body text-center">
-    <h5 class="card-title mb-3">Leyenda Resultados</h5>
-    <span class="badge bg-success me-2">Victoria 🟢</span>
-    <span class="badge bg-danger me-2">Derrota 🔴</span>
-    <span class="badge bg-warning text-dark">Empate 🟡</span>
-  </div>
-</div>
-
-<div class="container">
-  <div class="col-md-8 col-lg-6 mx-auto">
-    {% if past_matches %}
-      <ul class="list-group shadow-sm">
-        {% for match in past_matches %}
-          {% set u_is_home = match.homeTeam.id == 2305 %}
-          {% set u_score = match.homeScore.current if u_is_home else match.awayScore.current %}
-          {% set rival_score = match.awayScore.current if u_is_home else match.homeScore.current %}
-
-          {% if u_score > rival_score %}
-            {% set result_class = "list-group-item-success" %}
-          {% elif u_score < rival_score %}
-            {% set result_class = "list-group-item-danger" %}
-          {% else %}
-            {% set result_class = "list-group-item-warning" %}
-          {% endif %}
-
-          <li class="list-group-item {{ result_class }} d-flex justify-content-between align-items-center flex-wrap">
-            <div class="col-5 d-flex align-items-center">
-              <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:28px;">
-              <strong {% if match.homeTeam.id == 2305 %} style="text-decoration: underline;" {% endif %}>
-                {{ match.homeTeam.name }}
-              </strong>
-              {% if match.homeScore.current > match.awayScore.current %} ✅
-              {% elif match.homeScore.current < match.awayScore.current %} ❌
-              {% else %} ⚖️ {% endif %}
-            </div>
-            <div class="col-2 text-center fw-bold">
-              {{ match.homeScore.current }} - {{ match.awayScore.current }}
-            </div>
-            <div class="col-5 d-flex align-items-center justify-content-end">
-              {% if match.awayScore.current > match.homeScore.current %} ✅
-              {% elif match.awayScore.current < match.homeScore.current %} ❌
-              {% else %} ⚖️ {% endif %}
-              <strong {% if match.awayTeam.id == 2305 %} style="text-decoration: underline;" {% endif %}>
-                {{ match.awayTeam.name }}
-              </strong>
-              <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:28px;">
-            </div>
-            <div class="col-12 mt-2 d-flex justify-content-between">
-              <span>{{ match.startTimestamp | datetimeformat }}</span>
-              <span class="badge bg-dark">{{ match.tournament.name }}</span>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <div class="alert alert-info text-center">
-        No hay partidos jugados registrados por ahora.
-      </div>
-    {% endif %}
+<div class="card shadow-sm mb-4">
+  <div class="card-body p-0">
+    <iframe 
+      src="https://www.sofascore.com/es/team/football/universitario/2305"
+      style="width:100%; height:700px; border:none; overflow:hidden;"
+      scrolling="no">
+    </iframe>
   </div>
 </div>
 
