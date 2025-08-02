@@ -82,30 +82,29 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
 def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0, limit: int = 6):
     """
     Obtiene los últimos partidos jugados por el equipo.
-    Solo retorna los últimos `limit` (por defecto 6).
+    Retorna los más recientes primero, limitados a 'limit'.
     """
     url = f"{BASE_URL}/teams/get-last-matches"
     params = {"teamId": team_id, "pageIndex": page_index}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
-    data = r.json()
+    events = r.json().get("events", [])
 
-    events = data.get("events", [])
-
-    # Nos quedamos solo con los últimos N
-    events = events[:limit]
-
-    # Agregamos logos a los equipos
+    # Agregar logos
     for match in events:
         try:
             match["homeTeam"]["logo"] = get_team_logo(match["homeTeam"]["id"])
             match["awayTeam"]["logo"] = get_team_logo(match["awayTeam"]["id"])
-        except Exception as e:
-            print(f"Error cargando logo: {e}")
+        except Exception:
             match["homeTeam"]["logo"] = "/static/img/logo_u.png"
             match["awayTeam"]["logo"] = "/static/img/logo_u.png"
 
-    return events
+    # Ordenar por fecha descendente (más recientes primero)
+    events_sorted = sorted(events, key=lambda x: x.get("startTimestamp", 0), reverse=True)
+
+    # Devolver solo los últimos 'limit'
+    return events_sorted[:limit]
+
 
 
 
