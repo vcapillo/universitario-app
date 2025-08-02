@@ -16,22 +16,34 @@ LOGO_DIR = os.path.join("static", "img", "logos")
 os.makedirs(LOGO_DIR, exist_ok=True)
 
 
-def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0):
+def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0, limit: int = 5):
     """
-    Obtiene los próximos partidos de Universitario (con logos locales).
+    Obtiene los próximos partidos del equipo.
+    Solo retorna los próximos `limit` (por defecto 5).
     """
     url = f"{BASE_URL}/teams/get-next-matches"
     params = {"teamId": team_id, "pageIndex": page_index}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
-    events = r.json().get("events", [])
+    data = r.json()
 
-    # Agregamos los logos
+    events = data.get("events", [])
+
+    # Nos quedamos solo con los próximos N
+    events = events[:limit]
+
+    # Agregamos logos a los equipos
     for match in events:
-        match["homeTeam"]["logo"] = get_team_logo(match["homeTeam"]["id"])
-        match["awayTeam"]["logo"] = get_team_logo(match["awayTeam"]["id"])
+        try:
+            match["homeTeam"]["logo"] = get_team_logo(match["homeTeam"]["id"])
+            match["awayTeam"]["logo"] = get_team_logo(match["awayTeam"]["id"])
+        except Exception as e:
+            print(f"Error cargando logo: {e}")
+            match["homeTeam"]["logo"] = "/static/img/logo_u.png"
+            match["awayTeam"]["logo"] = "/static/img/logo_u.png"
 
     return events
+
 
 
 def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID):
@@ -69,27 +81,32 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
 
 def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0, limit: int = 6):
     """
-    Obtiene los partidos pasados de Universitario (limitados a los últimos N).
+    Obtiene los últimos partidos jugados por el equipo.
+    Solo retorna los últimos `limit` (por defecto 6).
     """
-    url = f"{BASE_URL}/teams/get-past-matches"
+    url = f"{BASE_URL}/teams/get-last-matches"
     params = {"teamId": team_id, "pageIndex": page_index}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
-    events = r.json().get("events", [])
+    data = r.json()
 
-    # Ordenar por fecha descendente (últimos primero)
-    events.sort(key=lambda x: x.get("startTimestamp", 0), reverse=True)
+    events = data.get("events", [])
 
-    # Agregar logos
+    # Nos quedamos solo con los últimos N
+    events = events[:limit]
+
+    # Agregamos logos a los equipos
     for match in events:
         try:
             match["homeTeam"]["logo"] = get_team_logo(match["homeTeam"]["id"])
             match["awayTeam"]["logo"] = get_team_logo(match["awayTeam"]["id"])
-        except Exception:
+        except Exception as e:
+            print(f"Error cargando logo: {e}")
             match["homeTeam"]["logo"] = "/static/img/logo_u.png"
             match["awayTeam"]["logo"] = "/static/img/logo_u.png"
 
-    return events[:limit]  # solo últimos 6
+    return events
+
 
 
 
