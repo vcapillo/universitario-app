@@ -45,15 +45,24 @@
   <ul class="list-group">
     {% for match in past_matches %}
       {% set u_is_home = match.homeTeam.id == 2305 %}
-      {% set u_score = match.homeScore.display if u_is_home else match.awayScore.display %}
-      {% set rival_score = match.awayScore.display if u_is_home else match.homeScore.display %}
 
-      {% if u_score > rival_score %}
-        {% set result_class = "list-group-item-success" %}
-      {% elif u_score < rival_score %}
-        {% set result_class = "list-group-item-danger" %}
+      {# Marcadores seguros (si no existe, muestra "-") #}
+      {% set home_score = match.homeScore.current if match.homeScore is defined and match.homeScore.current is defined else "-" %}
+      {% set away_score = match.awayScore.current if match.awayScore is defined and match.awayScore.current is defined else "-" %}
+
+      {% set u_score = home_score if u_is_home else away_score %}
+      {% set rival_score = away_score if u_is_home else home_score %}
+
+      {% if u_score != "-" and rival_score != "-" %}
+        {% if u_score > rival_score %}
+          {% set result_class = "list-group-item-success" %}
+        {% elif u_score < rival_score %}
+          {% set result_class = "list-group-item-danger" %}
+        {% else %}
+          {% set result_class = "list-group-item-warning" %}
+        {% endif %}
       {% else %}
-        {% set result_class = "list-group-item-warning" %}
+        {% set result_class = "" %}
       {% endif %}
 
       <li class="list-group-item {{ result_class }} d-flex justify-content-between align-items-center flex-wrap">
@@ -62,7 +71,7 @@
           <strong>{{ match.homeTeam.name }}</strong>
         </div>
         <div class="col-md-2 text-center fw-bold">
-          {{ match.homeScore.display }} - {{ match.awayScore.display }}
+          {{ home_score }} - {{ away_score }}
         </div>
         <div class="col-md-5 d-flex align-items-center justify-content-end">
           <strong>{{ match.awayTeam.name }}</strong>
