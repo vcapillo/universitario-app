@@ -25,11 +25,13 @@
           <tr {% if row["team"]["id"] == 2305 %} class="table-warning fw-bold" {% endif %}>
             <td>{{ row["position"] }}</td>
             <td>
-              <img src="{{ row['team']['logo'] }}"
-                   alt="{{ row['team']['name'] }}"
-                   style="height:24px;" class="me-2">
-              {{ row["team"]["name"] }}
-            </td>
+  <img src="{{ row.team.logo }}" alt="{{ row.team.name }}" style="height:24px;" class="me-2">
+  {{ row.team.name }}
+  {% if row.team.isPlaying %}
+    <span class="badge bg-danger ms-2">Jugando 🔴</span>
+  {% endif %}
+</td>
+
             <td>{{ row["points"] }}</td>
             <td>{{ row["matches"] }}</td>
             <td>{{ row["wins"] }}</td>

@@ -37,7 +37,7 @@ def get_team_fixtures(team_id: int = TEAM_ID, page_index: int = 0):
 def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID):
     """
     Obtiene la tabla de posiciones de la Liga 1 Clausura 2025.
-    Retorna directamente la lista de rows.
+    Marca los equipos que están jugando actualmente.
     """
     url = f"{BASE_URL}/tournaments/get-standings"
     params = {"tournamentId": tournament_id, "seasonId": season_id, "type": "total"}
@@ -47,14 +47,21 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
 
     rows = data.get("standings", [])[0].get("rows", [])
 
-    # Agregar logos a cada equipo
+    # Obtener todos los partidos en vivo
+    live_matches = get_live_matches()
+    live_teams = {match["homeTeam"]["id"] for match in live_matches} | {match["awayTeam"]["id"] for match in live_matches}
+
+    # Agregar logos y flag de "jugando"
     for row in rows:
         try:
             row["team"]["logo"] = get_team_logo(row["team"]["id"])
         except Exception:
             row["team"]["logo"] = "/static/img/logo_u.png"
 
+        row["team"]["isPlaying"] = row["team"]["id"] in live_teams
+
     return rows
+
 
 
 
@@ -110,3 +117,13 @@ def get_team_logo(team_id: int):
     except Exception as e:
         print(f"Excepción descargando logo {team_id}: {e}")
         return "/static/img/logo_u.png"
+
+def get_live_matches():
+    """
+    Retorna todos los eventos de fútbol en vivo.
+    """
+    url = f"{BASE_URL}/tournaments/get-live-events"
+    params = {"sport": "football"}
+    r = requests.get(url, headers=HEADERS, params=params)
+    r.raise_for_status()
+    return r.json().get("events", [])
