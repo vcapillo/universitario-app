@@ -75,9 +75,17 @@ h1, h2, h3 {
 
 /* Footer */
 footer {
-  margin-top: 50px;
-  padding: 15px;
-  background-color: var(--granate);
-  color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #7a0c0c;
+  color: #f7f3e9;
   text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 1px;
+  padding: 10px 0;
+  z-index: 1000;
 }
+
