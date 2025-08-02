@@ -67,15 +67,18 @@ def get_standings(tournament_id: int = TOURNAMENT_ID, season_id: int = SEASON_ID
 
 
 
-def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0):
+def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0, limit: int = 6):
     """
-    Obtiene los últimos partidos jugados por Universitario (con logos).
+    Obtiene los partidos pasados de Universitario (limitados a los últimos N).
     """
-    url = f"{BASE_URL}/teams/get-last-matches"
+    url = f"{BASE_URL}/teams/get-past-matches"
     params = {"teamId": team_id, "pageIndex": page_index}
     r = requests.get(url, headers=HEADERS, params=params)
     r.raise_for_status()
     events = r.json().get("events", [])
+
+    # Ordenar por fecha descendente (últimos primero)
+    events.sort(key=lambda x: x.get("startTimestamp", 0), reverse=True)
 
     # Agregar logos
     for match in events:
@@ -86,7 +89,8 @@ def get_team_past_matches(team_id: int = TEAM_ID, page_index: int = 0):
             match["homeTeam"]["logo"] = "/static/img/logo_u.png"
             match["awayTeam"]["logo"] = "/static/img/logo_u.png"
 
-    return events
+    return events[:limit]  # solo últimos 6
+
 
 
 def get_team_logo(team_id: int):

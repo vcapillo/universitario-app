@@ -1,81 +1,84 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="mb-4 text-center">📅 Partidos de Universitario</h2>
+<h2 class="mb-4 text-center">📅 Próximos Partidos</h2>
 
-<!-- Próximos Partidos -->
-<h4 class="mt-4 mb-3 text-success">Próximos Partidos</h4>
 {% if next_matches %}
-  <div class="table-responsive">
-    <table class="table table-striped align-middle text-center shadow-sm">
-      <thead class="table-dark">
-        <tr>
-          <th class="text-start">Local</th>
-          <th>vs</th>
-          <th class="text-end">Visitante</th>
-          <th>Fecha</th>
-          <th>Torneo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for match in next_matches %}
-        <tr>
-          <td class="text-start">
-            <img src="{{ match.homeTeam.logo }}" style="height:30px;" class="me-2">
-            <strong>{{ match.homeTeam.name }}</strong>
-          </td>
-          <td>⚽</td>
-          <td class="text-end">
-            <strong>{{ match.awayTeam.name }}</strong>
-            <img src="{{ match.awayTeam.logo }}" style="height:30px;" class="ms-2">
-          </td>
-          <td>{{ match.startTimestamp | datetimeformat("%d/%m/%Y %H:%M") }}</td>
-          <td><span class="badge bg-secondary">{{ match.tournament.name }}</span></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <ul class="list-group mb-5">
+    {% for match in next_matches %}
+      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+        <div class="col-md-5 d-flex align-items-center">
+          <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:30px;">
+          <strong>{{ match.homeTeam.name }}</strong>
+        </div>
+        <div class="col-md-2 text-center fw-bold">vs</div>
+        <div class="col-md-5 d-flex align-items-center justify-content-end">
+          <strong>{{ match.awayTeam.name }}</strong>
+          <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:30px;">
+        </div>
+        <div class="col-12 mt-2 d-flex justify-content-between">
+          <span>{{ match.startTimestamp | datetimeformat }}</span>
+          <span class="badge bg-secondary">{{ match.tournament.name }}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
 {% else %}
-  <div class="alert alert-info">No hay próximos partidos.</div>
+  <div class="alert alert-info text-center">
+    No hay partidos próximos registrados por ahora.
+  </div>
 {% endif %}
 
-<!-- Partidos Jugados -->
-<h4 class="mt-5 mb-3 text-danger">Partidos Jugados</h4>
-{% if past_matches %}
-  <div class="table-responsive">
-    <table class="table table-striped align-middle text-center shadow-sm">
-      <thead class="table-dark">
-        <tr>
-          <th class="text-start">Local</th>
-          <th>Resultado</th>
-          <th class="text-end">Visitante</th>
-          <th>Fecha</th>
-          <th>Torneo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for match in past_matches %}
-        <tr>
-          <td class="text-start">
-            <img src="{{ match.homeTeam.logo }}" style="height:30px;" class="me-2">
-            <strong>{{ match.homeTeam.name }}</strong>
-          </td>
-          <td>
-            {{ match.homeScore.current }} - {{ match.awayScore.current }}
-          </td>
-          <td class="text-end">
-            <strong>{{ match.awayTeam.name }}</strong>
-            <img src="{{ match.awayTeam.logo }}" style="height:30px;" class="ms-2">
-          </td>
-          <td>{{ match.startTimestamp | datetimeformat("%d/%m/%Y") }}</td>
-          <td><span class="badge bg-secondary">{{ match.tournament.name }}</span></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+<h2 class="mb-4 text-center">📜 Últimos 6 Partidos Jugados</h2>
+
+<!-- Leyenda en un card -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-body text-center">
+    <h5 class="card-title mb-3">Leyenda Resultados</h5>
+    <span class="badge bg-success me-2">Victoria 🟢</span>
+    <span class="badge bg-danger me-2">Derrota 🔴</span>
+    <span class="badge bg-warning text-dark">Empate 🟡</span>
   </div>
+</div>
+
+{% if past_matches %}
+  <ul class="list-group">
+    {% for match in past_matches %}
+      {% set u_is_home = match.homeTeam.id == 2305 %}
+      {% set u_score = match.homeScore.display if u_is_home else match.awayScore.display %}
+      {% set rival_score = match.awayScore.display if u_is_home else match.homeScore.display %}
+
+      {% if u_score > rival_score %}
+        {% set result_class = "list-group-item-success" %}
+      {% elif u_score < rival_score %}
+        {% set result_class = "list-group-item-danger" %}
+      {% else %}
+        {% set result_class = "list-group-item-warning" %}
+      {% endif %}
+
+      <li class="list-group-item {{ result_class }} d-flex justify-content-between align-items-center flex-wrap">
+        <div class="col-md-5 d-flex align-items-center">
+          <img src="{{ match.homeTeam.logo }}" alt="{{ match.homeTeam.name }}" class="me-2" style="height:30px;">
+          <strong>{{ match.homeTeam.name }}</strong>
+        </div>
+        <div class="col-md-2 text-center fw-bold">
+          {{ match.homeScore.display }} - {{ match.awayScore.display }}
+        </div>
+        <div class="col-md-5 d-flex align-items-center justify-content-end">
+          <strong>{{ match.awayTeam.name }}</strong>
+          <img src="{{ match.awayTeam.logo }}" alt="{{ match.awayTeam.name }}" class="ms-2" style="height:30px;">
+        </div>
+        <div class="col-12 mt-2 d-flex justify-content-between">
+          <span>{{ match.startTimestamp | datetimeformat }}</span>
+          <span class="badge bg-dark">{{ match.tournament.name }}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
 {% else %}
-  <div class="alert alert-info">No hay partidos jugados registrados.</div>
+  <div class="alert alert-info text-center">
+    No hay partidos jugados registrados por ahora.
+  </div>
 {% endif %}
 
 {% endblock %}

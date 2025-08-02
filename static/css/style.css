@@ -1,91 +1,69 @@
-/* ======================
-   Estilos Universitario
-   ====================== */
-
-/* Colores principales */
-:root {
-  --crema: #f8f5e9;
-  --granate: #7a1c1c;
-  --granate-oscuro: #5c1414;
-  --texto: #333333;
-}
-
-body {
-  font-family: 'Roboto', Arial, sans-serif;
-  background-color: var(--crema);
-  color: var(--texto);
-  margin: 0;
-  padding: 0;
-}
-
-/* Barra de navegación */
-.navbar {
-  background-color: var(--granate);
-}
-
-.navbar-brand img {
-  height: 45px;
-}
-
-.navbar-nav .nav-link {
-  color: white !important;
-  font-weight: 500;
-  margin: 0 10px;
-}
-
-.navbar-nav .nav-link.active {
-  background-color: var(--granate-oscuro);
-  border-radius: 8px;
-  padding: 6px 12px;
-}
-
-/* Contenedor principal */
-.container {
-  margin-top: 40px;
-}
-
-/* Tablas */
-.table {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-}
-
-.table thead {
-  background-color: var(--granate);
-  color: white;
-}
-
-.table tbody tr:hover {
-  background-color: rgba(122, 28, 28, 0.05);
-}
-
-.table-warning {
-  background-color: rgba(122, 28, 28, 0.15) !important;
-  color: var(--granate-oscuro);
-  font-weight: bold;
-}
-
-/* Encabezados */
-h1, h2, h3 {
-  color: var(--granate-oscuro);
-  font-weight: bold;
-}
-
-/* Footer */
-footer {
+/* Fondo global */
+.bg-container {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   width: 100%;
-  background: #7a0c0c;
-  color: #f7f3e9;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  letter-spacing: 1px;
-  padding: 10px 0;
-  z-index: 1000;
+  height: 100%;
+  background: url("https://universitario.pe/media/images/banners/PORTDA_WEB.jpg") no-repeat center center fixed;
+  background-size: cover;
+  z-index: -2;
 }
 
+/* Overlay (oscurece el fondo en todas menos home) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* transparencia */
+  z-index: -1;
+}
+
+/* Contenedor de contenido (en secciones ≠ home se ve como card con borde y fondo translúcido) */
+.content-wrapper {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Excepción: en home el contenedor es transparente */
+body[data-page="home"] .content-wrapper {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0; /* para que quede más limpia la portada */
+}
+
+/* Navbar */
+.navbar {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(5px);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #ffc107 !important; /* dorado para destacar */
+}
+
+/* Listas y tablas */
+.list-group-item {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.table {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  overflow: hidden;
+}
