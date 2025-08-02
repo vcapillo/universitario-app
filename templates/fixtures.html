@@ -31,16 +31,6 @@
 
 <h2 class="mb-4 text-center">📜 Últimos 6 Partidos Jugados</h2>
 
-<!-- Leyenda en un card -->
-<div class="card mb-4 shadow-sm">
-  <div class="card-body text-center">
-    <h5 class="card-title mb-3">Leyenda Resultados</h5>
-    <span class="badge bg-success me-2">Victoria 🟢</span>
-    <span class="badge bg-danger me-2">Derrota 🔴</span>
-    <span class="badge bg-warning text-dark">Empate 🟡</span>
-  </div>
-</div>
-
 {% if past_matches %}
   <ul class="list-group">
     {% for match in past_matches %}
